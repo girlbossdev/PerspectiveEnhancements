@@ -1,0 +1,9 @@
+{
+  "perspectivemod.perspective.back": "Back",
+  "perspectivemod.perspective.front": "Front",
+  "perspectivemod.options.title": "Perspective Settings",
+  "perspectivemod.options.button": "Perspective Settings...",
+  "perspectivemod.options.hold": "Hold",
+  "perspectivemod.options.holdTime": "Toggle/Hold Time: %s",
+  "perspectivemod.options.defaultPerspective": "Default Perspective"
+}
