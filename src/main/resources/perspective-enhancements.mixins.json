@@ -8,6 +8,7 @@
   "client": [
     "ControlsOptionsScreenMixin",
     "GameOptionsMixin",
+    "GameOptionsScreenMixin",
     "MinecraftClientMixin",
     "ScreenMixin"
   ]
