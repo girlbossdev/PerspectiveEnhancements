@@ -13,10 +13,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 public class PerspectiveOptionsScreen extends GameOptionsScreen {
+
     private final ModOptions modOptions = PerspectiveEnhancements.getInstance().getOptions();
-
-    private OptionListWidget optionListWidget;
-
+    private OptionListWidget body;
     private SliderWidget holdTimeOptionSlider;
     private CyclingButtonWidget<Perspective> defaultPerspectiveOptionButton;
 
@@ -25,8 +24,11 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
     }
 
     @Override
-    protected void init() {
-        optionListWidget = addDrawableChild(new OptionListWidget(client, width, height, this));
+    protected void addOptions() {}
+
+    @Override
+    protected void initBody() {
+        body = addDrawableChild(new OptionListWidget(client, width, this));
 
         var holdOptionButton = CyclingButtonWidget
                 .builder(this::enabledText)
@@ -52,6 +54,7 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
                 modOptions.setHoldTime((int) Math.round(MathHelper.clampedLerp(0, 1000, value) / 50) * 50);
             }
         };
+
         holdTimeOptionSlider.active = modOptions.holdEnabled();
 
         var backOptionButton = CyclingButtonWidget
@@ -81,17 +84,15 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
                 );
         defaultPerspectiveOptionButton.active = modOptions.backEnabled() && modOptions.frontEnabled();
 
-        optionListWidget.addWidgetEntry(holdOptionButton, holdTimeOptionSlider);
-        optionListWidget.addWidgetEntry(backOptionButton, frontOptionButton);
-        optionListWidget.addWidgetEntry(defaultPerspectiveOptionButton, null);
-
-        super.init();
+        body.addWidgetEntry(holdOptionButton, holdTimeOptionSlider);
+        body.addWidgetEntry(backOptionButton, frontOptionButton);
+        body.addWidgetEntry(defaultPerspectiveOptionButton, null);
     }
 
     @Override
     protected void initTabNavigation() {
         super.initTabNavigation();
-        optionListWidget.position(width, layout);
+        body.position(width, layout);
     }
 
     private Text enabledText(boolean enabled) {
