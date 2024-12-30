@@ -90,8 +90,8 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
     }
 
     @Override
-    protected void initTabNavigation() {
-        super.initTabNavigation();
+    protected void refreshWidgetPositions() {
+        super.refreshWidgetPositions();
         body.position(width, layout);
     }
 
