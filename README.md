@@ -1,4 +1,4 @@
-# Perspective Enhancements
+# Perspective Enhancements ![Workflow Status](https://img.shields.io/github/actions/workflow/status/girlbossdev/PerspectiveEnhancements/gradle.yml) [![Modrinth Downloads](https://img.shields.io/modrinth/dt/perspective-enhancements?logo=modrinth&color=00AF5C)](https://modrinth.com/mod/perspective-enhancements)
 
 Adds a settings page under Options > Controls that allows you to configure the behavior of the perspective key.
 
