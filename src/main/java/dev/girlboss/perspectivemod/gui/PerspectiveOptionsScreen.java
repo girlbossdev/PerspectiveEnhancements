@@ -31,9 +31,7 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
         body = addDrawableChild(new OptionListWidget(client, width, this));
 
         var holdOptionButton = CyclingButtonWidget
-                .builder(this::enabledText)
-                .values(true, false)
-                .initially(modOptions.holdEnabled())
+                .onOffBuilder(modOptions.holdEnabled())
                 .build(Text.translatable("perspectivemod.options.hold"), (button, value) -> {
                     holdTimeOptionSlider.active = value;
                     modOptions.setHold(value);
@@ -58,30 +56,26 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
         holdTimeOptionSlider.active = modOptions.holdEnabled();
 
         var backOptionButton = CyclingButtonWidget
-                .builder(this::enabledText)
-                .values(true, false)
-                .initially(modOptions.backEnabled())
+                .onOffBuilder(modOptions.backEnabled())
                 .build(Text.translatable("perspectivemod.perspective.back"), (button, value) -> {
                     defaultPerspectiveOptionButton.active = value && modOptions.frontEnabled();
                     modOptions.setBack(value);
                 });
 
         var frontOptionButton = CyclingButtonWidget
-                .builder(this::enabledText)
-                .values(true, false)
-                .initially(modOptions.frontEnabled())
+                .onOffBuilder(modOptions.frontEnabled())
                 .build(Text.translatable("perspectivemod.perspective.front"), (button, value) -> {
                     defaultPerspectiveOptionButton.active = value && modOptions.backEnabled();
                     modOptions.setFront(value);
                 });
 
         defaultPerspectiveOptionButton = CyclingButtonWidget
-                .builder(this::perspectiveText)
+                .builder(this::perspectiveText, modOptions.getDefaultPerspective())
                 .values(Perspective.THIRD_PERSON_BACK, Perspective.THIRD_PERSON_FRONT)
-                .initially(modOptions.getDefaultPerspective())
                 .build(Text.translatable("perspectivemod.options.defaultPerspective"),
                         (button, value) -> modOptions.setDefaultPerspective(value)
                 );
+
         defaultPerspectiveOptionButton.active = modOptions.backEnabled() && modOptions.frontEnabled();
 
         body.addWidgetEntry(holdOptionButton, holdTimeOptionSlider);
@@ -93,10 +87,6 @@ public class PerspectiveOptionsScreen extends GameOptionsScreen {
     protected void refreshWidgetPositions() {
         super.refreshWidgetPositions();
         body.position(width, layout);
-    }
-
-    private Text enabledText(boolean enabled) {
-        return enabled ? Text.translatable("options.on") : Text.translatable("options.off");
     }
 
     private Text perspectiveText(Perspective perspective) {
