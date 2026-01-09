@@ -1,0 +1,9 @@
+{
+  "perspectivemod.perspective.back": "Назад",
+  "perspectivemod.perspective.front": "Вперёд",
+  "perspectivemod.options.title": "Настройки перспективы",
+  "perspectivemod.options.button": "Настройки перспективы...",
+  "perspectivemod.options.hold": "Удержи",
+  "perspectivemod.options.holdTime": "Время переключения/удержания: %s",
+  "perspectivemod.options.defaultPerspective": "Стандартная перспектива"
+}
