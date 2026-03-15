@@ -3,19 +3,19 @@ package dev.girlboss.perspectivemod;
 import dev.girlboss.perspectivemod.options.ModOptions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.Perspective;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
 
 import java.io.File;
 
 public class PerspectiveEnhancements implements ClientModInitializer {
     private static PerspectiveEnhancements instance;
 
-    private MinecraftClient client;
+    private Minecraft minecraft;
     private ModOptions options;
 
     private long pressTime = -1L;
-    private Perspective lastPerspective = Perspective.FIRST_PERSON;
+    private CameraType lastPerspective = CameraType.FIRST_PERSON;
 
     public static PerspectiveEnhancements getInstance() {
         return instance;
@@ -23,10 +23,10 @@ public class PerspectiveEnhancements implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        client = MinecraftClient.getInstance();
-        options = new ModOptions(new File(client.runDirectory, "config/perspective-enhancements.properties"));
+        minecraft = Minecraft.getInstance();
+        options = new ModOptions(new File(minecraft.gameDirectory, "config/perspective-enhancements.properties"));
         options.load();
-        ClientTickEvents.END_CLIENT_TICK.register(client -> handlePerspectiveKey());
+        ClientTickEvents.END_CLIENT_TICK.register(_ -> handlePerspectiveKey());
         instance = this;
     }
 
@@ -34,13 +34,13 @@ public class PerspectiveEnhancements implements ClientModInitializer {
         return options;
     }
 
-    private Perspective getNextPerspective() {
-        var currentPerspective = client.options.getPerspective();
+    private CameraType getNextPerspective() {
+        var currentPerspective = minecraft.options.getCameraType();
         var perspectiveList = options.getPerspectiveList();
 
         var currentIndex = perspectiveList.indexOf(currentPerspective);
         if (currentIndex == -1) {
-            return Perspective.FIRST_PERSON;
+            return CameraType.FIRST_PERSON;
         }
 
         var nextIndex = currentIndex == perspectiveList.size() - 1 ? 0 : currentIndex + 1;
@@ -48,20 +48,21 @@ public class PerspectiveEnhancements implements ClientModInitializer {
     }
 
     private void handlePerspectiveKey() {
-        var clientOptions = client.options;
+        var clientOptions = minecraft.options;
 
         if (!options.holdEnabled() && pressTime == -1L) {
-            while (clientOptions.togglePerspectiveKey.wasPressed()) {
+            while (clientOptions.keyTogglePerspective.consumeClick()) {
                 changePerspective(getNextPerspective());
             }
+
             return;
         }
 
-        if (clientOptions.togglePerspectiveKey.isPressed()) {
+        if (clientOptions.keyTogglePerspective.isDown()) {
             if (pressTime != -1L) return;
 
             pressTime = System.currentTimeMillis();
-            lastPerspective = clientOptions.getPerspective();
+            lastPerspective = clientOptions.getCameraType();
             changePerspective(getNextPerspective());
         } else {
             if (pressTime == -1L) return;
@@ -75,11 +76,18 @@ public class PerspectiveEnhancements implements ClientModInitializer {
         }
     }
 
-    private void changePerspective(Perspective perspective) {
-        client.options.setPerspective(perspective);
-        if (perspective.isFirstPerson() != client.options.getPerspective().isFirstPerson()) {
-            client.gameRenderer.onCameraEntitySet(client.options.getPerspective().isFirstPerson() ? client.getCameraEntity() : null);
+    private void changePerspective(CameraType perspective) {
+        minecraft.options.setCameraType(perspective);
+
+        if (perspective.isFirstPerson() != minecraft.options.getCameraType().isFirstPerson()) {
+            minecraft.gameRenderer.checkEntityPostEffect(
+                    minecraft.options.getCameraType().isFirstPerson()
+                            ? minecraft.getCameraEntity()
+                            : null
+            );
         }
-        client.worldRenderer.scheduleTerrainUpdate();
+
+        // TODO: is this really needed?
+        minecraft.levelRenderer.needsUpdate();
     }
 }

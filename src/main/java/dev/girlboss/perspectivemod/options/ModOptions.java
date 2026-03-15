@@ -1,6 +1,6 @@
 package dev.girlboss.perspectivemod.options;
 
-import net.minecraft.client.option.Perspective;
+import net.minecraft.client.CameraType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +19,9 @@ public class ModOptions {
 
     private boolean back = true;
     private boolean front = true;
-    private Perspective defaultPerspective = Perspective.THIRD_PERSON_BACK;
+    private CameraType defaultPerspective = CameraType.THIRD_PERSON_BACK;
 
-    private final ArrayList<Perspective> perspectiveList = new ArrayList<>();
+    private final List<CameraType> perspectiveList = new ArrayList<>();
 
     public ModOptions(File file) {
         this.file = file;
@@ -59,7 +59,7 @@ public class ModOptions {
         var defaultPerspective = properties.getProperty("defaultPerspective", Integer.toString(this.defaultPerspective.ordinal()));
         try {
             var ordinal = Integer.parseInt(defaultPerspective);
-            var values = Perspective.values();
+            var values = CameraType.values();
             if (ordinal >= 0 && ordinal < values.length) {
                 this.defaultPerspective = values[ordinal];
             }
@@ -78,7 +78,7 @@ public class ModOptions {
             var inputStream = new FileOutputStream(file);
             properties.store(inputStream, "Configuration file for Perspective Enhancements");
         } catch (IOException e) {
-            logger.error("Failed to save config file: ", e);
+            logger.error("Failed to save PerspectiveEnhancements settings", e);
         }
     }
 
@@ -116,16 +116,16 @@ public class ModOptions {
         rebuildPerspectiveList();
     }
 
-    public Perspective getDefaultPerspective() {
+    public CameraType getDefaultPerspective() {
         return defaultPerspective;
     }
 
-    public void setDefaultPerspective(Perspective perspective) {
+    public void setDefaultPerspective(CameraType perspective) {
         defaultPerspective = perspective;
         rebuildPerspectiveList();
     }
 
-    public List<Perspective> getPerspectiveList() {
+    public List<CameraType> getPerspectiveList() {
         if (perspectiveList.isEmpty()) {
             rebuildPerspectiveList();
         }
@@ -135,14 +135,14 @@ public class ModOptions {
 
     private void rebuildPerspectiveList() {
         perspectiveList.clear();
-        perspectiveList.add(Perspective.FIRST_PERSON);
+        perspectiveList.add(CameraType.FIRST_PERSON);
 
-        if (defaultPerspective == Perspective.THIRD_PERSON_BACK) {
-            if (back) perspectiveList.add(Perspective.THIRD_PERSON_BACK);
-            if (front) perspectiveList.add(Perspective.THIRD_PERSON_FRONT);
+        if (defaultPerspective == CameraType.THIRD_PERSON_BACK) {
+            if (back) perspectiveList.add(CameraType.THIRD_PERSON_BACK);
+            if (front) perspectiveList.add(CameraType.THIRD_PERSON_FRONT);
         } else {
-            if (front) perspectiveList.add(Perspective.THIRD_PERSON_FRONT);
-            if (back) perspectiveList.add(Perspective.THIRD_PERSON_BACK);
+            if (front) perspectiveList.add(CameraType.THIRD_PERSON_FRONT);
+            if (back) perspectiveList.add(CameraType.THIRD_PERSON_BACK);
         }
     }
 }
