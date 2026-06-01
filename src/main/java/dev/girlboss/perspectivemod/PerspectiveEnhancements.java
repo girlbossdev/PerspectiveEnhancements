@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 
 import java.io.File;
 
@@ -86,8 +87,5 @@ public class PerspectiveEnhancements implements ClientModInitializer {
                             : null
             );
         }
-
-        // TODO: is this really needed?
-        minecraft.levelRenderer.needsUpdate();
     }
 }

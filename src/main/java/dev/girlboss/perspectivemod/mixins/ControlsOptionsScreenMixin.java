@@ -2,6 +2,7 @@ package dev.girlboss.perspectivemod.mixins;
 
 import dev.girlboss.perspectivemod.gui.PerspectiveOptionsScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -25,11 +26,13 @@ public abstract class ControlsOptionsScreenMixin extends OptionsSubScreenMixin {
             )
     )
     private void injectPerspectiveOptionsButton(CallbackInfo callbackInfo) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Gui gui = minecraft.gui;
+
         list.addSmall(
                 Button.builder(
                         Component.translatable("perspectivemod.options.button"),
-                        _ -> Minecraft.getInstance()
-                                .setScreen(new PerspectiveOptionsScreen((Screen) ((Object) this)))
+                        _ -> gui.setScreen(new PerspectiveOptionsScreen((Screen) ((Object) this)))
                 ).build(), null
         );
     }
